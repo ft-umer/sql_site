@@ -49,6 +49,7 @@ if (isset($_POST['submit'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,6 +59,7 @@ if (isset($_POST['submit'])) {
     <!-- Date picker CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
+
 <body class="font-sans bg-gray-50">
     <!-- Navigation -->
     <nav class="fixed w-full bg-white/95 backdrop-blur-sm shadow-sm z-50">
@@ -66,10 +68,10 @@ if (isset($_POST['submit'])) {
                 <div class="flex items-center">
                     <h1 class="text-2xl font-bold text-blue-900">Luxury Haven</h1>
                 </div>
-                
+
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.php" class="text-gray-700 hover:text-blue-900">Home</a>
-                    <a href="#rooms" class="text-gray-700 hover:text-blue-900">Rooms</a>
+                    <a href="rooms.php" class="text-gray-700 hover:text-blue-900">Rooms</a>
                     <a href="#amenities" class="text-gray-700 hover:text-blue-900">Amenities</a>
                     <a href="#gallery" class="text-gray-700 hover:text-blue-900">Gallery</a>
                     <a href="#contact" class="text-gray-700 hover:text-blue-900">Contact</a>
@@ -78,7 +80,8 @@ if (isset($_POST['submit'])) {
 
                 <button class="md:hidden flex items-center" onclick="toggleMenu()">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
                 </button>
             </div>
@@ -88,7 +91,7 @@ if (isset($_POST['submit'])) {
         <div class="md:hidden hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="index.php" class="block px-3 py-2 text-gray-700 hover:text-blue-900">Home</a>
-                <a href="#rooms" class="block px-3 py-2 text-gray-700 hover:text-blue-900">Rooms</a>
+                <a href="rooms.php" class="block px-3 py-2 text-gray-700 hover:text-blue-900">Rooms</a>
                 <a href="#amenities" class="block px-3 py-2 text-gray-700 hover:text-blue-900">Amenities</a>
                 <a href="#gallery" class="block px-3 py-2 text-gray-700 hover:text-blue-900">Gallery</a>
                 <a href="#contact" class="block px-3 py-2 text-gray-700 hover:text-blue-900">Contact</a>
@@ -103,7 +106,7 @@ if (isset($_POST['submit'])) {
             <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-6">Book Your Stay</h1>
                 <span><?php echo $info; ?></span>
-                <form id="bookingForm" class="space-y-6" action=""  method="post">
+                <form id="bookingForm" class="space-y-6" action="" method="post">
                     <!-- Dates Selection -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -168,7 +171,7 @@ if (isset($_POST['submit'])) {
                                     class="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-900 focus:border-blue-900">
                             </div>
                         </div>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
@@ -231,60 +234,61 @@ if (isset($_POST['submit'])) {
     <!-- Date picker JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-         // Mobile menu toggle
-         function toggleMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+    // Mobile menu toggle
+    function toggleMenu() {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+    }
+    // Initialize date pickers
+    flatpickr("#checkin", {
+        minDate: "today",
+        onChange: function(selectedDates) {
+            // Set minimum date for checkout to be after checkin
+            const checkoutPicker = document.getElementById("checkout")._flatpickr;
+            checkoutPicker.set("minDate", selectedDates[0].fp_incr(1));
         }
-        // Initialize date pickers
-        flatpickr("#checkin", {
-            minDate: "today",
-            onChange: function(selectedDates) {
-                // Set minimum date for checkout to be after checkin
-                const checkoutPicker = document.getElementById("checkout")._flatpickr;
-                checkoutPicker.set("minDate", selectedDates[0].fp_incr(1));
-            }
-        });
+    });
 
-        flatpickr("#checkout", {
-            minDate: "today",
-        });
+    flatpickr("#checkout", {
+        minDate: "today",
+    });
 
-        // Simple price calculator
-        const form = document.getElementById('bookingForm');
-        form.addEventListener('change', calculatePrice);
+    // Simple price calculator
+    const form = document.getElementById('bookingForm');
+    form.addEventListener('change', calculatePrice);
 
-        function calculatePrice() {
-            const roomSelect = form.querySelector('select');
-            const roomType = roomSelect.value;
-            let basePrice = 0;
+    function calculatePrice() {
+        const roomSelect = form.querySelector('select');
+        const roomType = roomSelect.value;
+        let basePrice = 0;
 
-            switch(roomType) {
-                case 'deluxe':
-                    basePrice = 299;
-                    break;
-                case 'luxury':
-                    basePrice = 499;
-                    break;
-                case 'presidential':
-                    basePrice = 899;
-                    break;
-            }
-
-            const checkin = new Date(document.getElementById('checkin').value);
-            const checkout = new Date(document.getElementById('checkout').value);
-            
-            if (checkin && checkout && checkout > checkin) {
-                const nights = (checkout - checkin) / (1000 * 60 * 60 * 24);
-                const roomTotal = basePrice * nights;
-                const taxes = roomTotal * 0.15;
-                const total = roomTotal + taxes;
-
-                document.getElementById('roomRate').textContent = `$${roomTotal}`;
-                document.getElementById('taxes').textContent = `$${taxes.toFixed(2)}`;
-                document.getElementById('total').textContent = `$${total.toFixed(2)}`;
-            }
+        switch (roomType) {
+            case 'deluxe':
+                basePrice = 299;
+                break;
+            case 'luxury':
+                basePrice = 499;
+                break;
+            case 'presidential':
+                basePrice = 899;
+                break;
         }
+
+        const checkin = new Date(document.getElementById('checkin').value);
+        const checkout = new Date(document.getElementById('checkout').value);
+
+        if (checkin && checkout && checkout > checkin) {
+            const nights = (checkout - checkin) / (1000 * 60 * 60 * 24);
+            const roomTotal = basePrice * nights;
+            const taxes = roomTotal * 0.15;
+            const total = roomTotal + taxes;
+
+            document.getElementById('roomRate').textContent = `$${roomTotal}`;
+            document.getElementById('taxes').textContent = `$${taxes.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        }
+    }
     </script>
 </body>
+
 </html>

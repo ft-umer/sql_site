@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: admin.php"); // Redirect to admin login if not logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: user_dashboard.php"); // Redirect to admin login if not logged in
     exit;
 }
 
@@ -99,19 +99,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservation_id'])) {
                     </thead>
                     <tbody>
                         <?php while ($user = $usersResult->fetch_assoc()): ?>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2 border-b"><?= $user['id'] ?></td>
-                                <td class="px-4 py-2 border-b"><?= $user['first_name'] ?></td>
-                                <td class="px-4 py-2 border-b"><?= $user['last_name'] ?></td>
-                                <td class="px-4 py-2 border-b"><?= $user['email'] ?></td>
-                                <td class="px-4 py-2 border-b"><?= $user['phone'] ?></td>
-                                <td class="px-4 py-2 border-b">
-                                    <form method="post" action="">
-                                        <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
-                                        <button type="submit" name="delete_user" class="text-red-600 hover:underline">Delete</button>
-                                    </form>
-                                </td>
-                            </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2 border-b"><?= $user['id'] ?></td>
+                            <td class="px-4 py-2 border-b"><?= $user['first_name'] ?></td>
+                            <td class="px-4 py-2 border-b"><?= $user['last_name'] ?></td>
+                            <td class="px-4 py-2 border-b"><?= $user['email'] ?></td>
+                            <td class="px-4 py-2 border-b"><?= $user['phone'] ?></td>
+                            <td class="px-4 py-2 border-b">
+                                <form method="post" action="">
+                                    <input type="hidden" name="user_id" value="<?= $user['id'] ?>">
+                                    <button type="submit" name="delete_user"
+                                        class="text-red-600 hover:underline">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>
@@ -138,33 +139,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['reservation_id'])) {
                     </thead>
                     <tbody>
                         <?php while ($reservation = $reservationsResult->fetch_assoc()): ?>
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2 border-b"><?= $reservation['user_id'] ?></td>
-                                <td class="px-4 py-2 border-b"><?= $reservation['checkin_date'] ?></td>
-                                <td class="px-4 py-2 border-b"><?= $reservation['checkout_date'] ?></td>
-                                <td class="px-4 py-2 border-b"><?= $reservation['room_type'] ?></td>
-                                <td class="px-4 py-2 border-b"><?= $reservation['adults'] ?></td>
-                                <td class="px-4 py-2 border-b"><?= $reservation['children'] ?></td>
-                                <td class="px-4 py-2 border-b"><?= $reservation['total_price'] ?></td>
-                                <td class="px-4 py-2 border-b">
-                                    <span class="<?= $reservation['status'] === 'approved' ? 'text-green-600' : ($reservation['status'] === 'rejected' ? 'text-red-600' : 'text-gray-600') ?>">
-                                        <?= ucfirst($reservation['status']) ?>
-                                    </span>
-                                </td>
-                                <td class="px-4 py-2 border-b">
-                                    <?php if ($reservation['status'] == 'pending'): ?>
-                                        <form method="post" action="">
-                                            <input type="hidden" name="reservation_id" value="<?= $reservation['id'] ?>">
-                                            <button type="submit" name="approve_reservation" class="text-green-600 hover:underline">Approve</button>
-                                            <button type="submit" name="reject_reservation" class="text-red-600 hover:underline">Reject</button>
-                                        </form>
-                                    <?php else: ?>
-                                        <span class="text-gray-600">Processed</span>
-                                    <?php endif; ?>
-                                   
-                                </td>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2 border-b"><?= $reservation['user_id'] ?></td>
+                            <td class="px-4 py-2 border-b"><?= $reservation['checkin_date'] ?></td>
+                            <td class="px-4 py-2 border-b"><?= $reservation['checkout_date'] ?></td>
+                            <td class="px-4 py-2 border-b"><?= $reservation['room_type'] ?></td>
+                            <td class="px-4 py-2 border-b"><?= $reservation['adults'] ?></td>
+                            <td class="px-4 py-2 border-b"><?= $reservation['children'] ?></td>
+                            <td class="px-4 py-2 border-b"><?= $reservation['total_price'] ?></td>
+                            <td class="px-4 py-2 border-b">
+                                <span
+                                    class="<?= $reservation['status'] === 'approved' ? 'text-green-600' : ($reservation['status'] === 'rejected' ? 'text-red-600' : 'text-gray-600') ?>">
+                                    <?= ucfirst($reservation['status']) ?>
+                                </span>
+                            </td>
+                            <td class="px-4 py-2 border-b">
+                                <?php if ($reservation['status'] == 'pending'): ?>
+                                <form method="post" action="">
+                                    <input type="hidden" name="reservation_id" value="<?= $reservation['id'] ?>">
+                                    <button type="submit" name="approve_reservation"
+                                        class="text-green-600 hover:underline">Approve</button>
+                                    <button type="submit" name="reject_reservation"
+                                        class="text-red-600 hover:underline">Reject</button>
+                                </form>
+                                <?php else: ?>
+                                <span class="text-gray-600">Processed</span>
+                                <?php endif; ?>
 
-                            </tr>
+                            </td>
+
+                        </tr>
                         <?php endwhile; ?>
                     </tbody>
                 </table>

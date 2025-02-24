@@ -51,7 +51,6 @@ if (isset($_POST['submit'])) {
                     <a href="index.php" class="text-2xl font-bold text-blue-900">Luxury Haven</a>
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
-                   
                     <a href="signin.php" class="text-gray-700 hover:text-blue-900">Sign In</a>
                     <a href="admin.php" class="text-gray-700 hover:text-blue-900">Admin Login</a>
                 </div>

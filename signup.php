@@ -1,5 +1,6 @@
 <?php
 include('db_conn.php');
+session_start();
 
 $info = '';
 
@@ -47,7 +48,6 @@ if (isset($_POST['submit'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
